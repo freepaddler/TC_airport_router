@@ -214,3 +214,7 @@ CONFIGURE_ENV+= ac_cv_file__dev_urandom=yes
     + https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/doc/HOWTO-use-crosscompile
     + https://ftp.netbsd.org/pub/pkgsrc/stable/pkgsrc/doc/HOWTO-dev-crosscompile
     + https://www.netbsd.org/docs/guide/en/chap-build.html
++ Airport access & management
+    + https://github.com/x56/airpyrt-tools
+    + https://github.com/samuelthomas2774/airport
+    + https://github.com/samuelthomas2774/airport
