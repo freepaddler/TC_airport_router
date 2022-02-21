@@ -1,0 +1,102 @@
+### Variables management
+# include config variables
+. /mnt/Flash/tc/tc.conf
+
+CONFDIR="$BASE/conf"
+[ ! -d "$CONFDIR" ] && mkdir -p "$CONFDIR"
+
+# set run directory
+RUNDIR="$BASE/run"
+[ ! -d "$RUNDIR" ] && mkdir -p "$RUNDIR"
+
+# set vars directory
+VARDIR="$BASE/vars/"
+[ ! -d "$VARDIR" ] && mkdir -p "$VARDIR"
+
+DHCPD_LEASES="$CONFDIR/dhcpd.leases"
+DHCPD_CONF="$CONFDIR/dhcpd.conf"
+
+# read and assign variables from files
+read_vars() {
+    for f in $VARDIR*; do
+        [ -e "$f" ] && eval ${f#$VARDIR}="$(cat $f)"
+    done;
+}
+
+# remove all variables
+flush_vars() {
+    # unassign existing vars
+    for f in in $VARDIR*; do
+        eval ${f#$VARDIR}=
+    done
+    # delete var files
+    rm -f $VARDIR*
+    read_vars
+}
+
+# set variable
+set_var() {
+    echo "$2" > "$VARDIR$1"
+    read_vars
+}
+
+# delete variable
+del_var() {
+    rm -f "$VARDIR$1"
+    read_vars
+}
+
+### logging settings
+# name of logging script
+name=$(basename "$0")
+
+# function to log message to log file
+# parameters
+#   $1 message to log
+lg() {
+    echo -e "$(date +"%Y.%m.%d %T") [$name] $1" >> "$LOG"
+}
+
+### common functions
+
+# check if ip address is IPv4
+# parameters
+#   $1 ip address
+isIPv4() {
+    if [ x"$1" = x"$(echo $1 | sed -rn 's/^(([0-9]{1,3}\.){3}[0-9]{1,3})$/\1/p')" ]; then
+        return 0
+    else 
+        return 1
+    fi  
+}
+
+# check if ip address is public
+# to run on external interface
+# parameters
+#   $1 ip address
+isPubIP() {
+    case $1 in
+        0.0.0.0|169.*)
+            return 1
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+}
+
+# get file modification time
+# parameters
+#   $1 full file path
+getModTime() {
+    if [ -e "$1" ]; then
+        ls -lT "$1" | ( read a a a a a t1 t2 t3 t4 a;
+            local t="$t1 $t2 $t3 $t4";
+            echo $(date -d "$t" "+%s")
+            )
+    else
+        echo 0
+    fi
+}
+
+read_vars
