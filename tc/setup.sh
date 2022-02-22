@@ -19,7 +19,7 @@ done;
 # on the start time it checks unterface state
 # if UP - calls up scripts (-u option)
 lg "Start ifwatchd bridge0 bcmeth1"
-/usr/sbin/ifwatchd -u "$BASE/bin/if-up.sh" -d "$BASE/bin/if-down.sh" bridge0 bcmeth1 
+/usr/sbin/ifwatchd -u "$BASE/bin/if-up.sh" -d "$BASE/bin/if-down.sh" bridge0 bcmeth1 bridge1
 sleep 1
 # save pid in file
  ps x -o pid,command | sed -nr 's|(([^ ]+ ){1})/usr/sbin/ifwatchd.*|\1|p' > "$RUNDIR/ifwatchd.pid"

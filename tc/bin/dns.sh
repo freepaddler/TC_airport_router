@@ -196,6 +196,9 @@ ddns_add() {
         "${TC_IP%[0-9]}")
             z=$ZONE
             ;;
+        "${TC_IP_guest%[0-9]}")
+            z=guest.$ZONE
+            ;;
         *)
             z=
             ;;
@@ -263,7 +266,7 @@ dns_static() {
     lg "Request static zones setup"
     # ZONE and RevZone definition
     # gw always points to TC_IP
-    cat << EOF > $STATIC
+    cat << EOF > "$STATIC"
 #Primary zone
 Z$ZONE:ns.$ZONE:root.$ZONE::900:90:86400:900:$TTL
 Z$RevZONE:ns.$ZONE:root.$ZONE::900:90:86400:900:$TTL
@@ -272,8 +275,19 @@ Z$RevZONE:ns.$ZONE:root.$ZONE::900:90:86400:900:$TTL
 =$(hostname).$ZONE:$TC_IP:$TTL
 +gw.$ZONE:$TC_IP:$TTL
 
-#Static records
 EOF
+    if [ -n "$RevZONE_guest" ]; then
+    cat << EOF >> "$STATIC"
+#Guest zone
+Zguest.$ZONE:ns.guest.$ZONE:root.guest.$ZONE::900:90:86400:900:$TTL
+Z$RevZONE_guest:ns.guest.$ZONE:root.guest.$ZONE::900:90:86400:900:$TTL
+&guest.$ZONE:$TC_IP_guest:ns.guest.$ZONE:$TTL
+&$RevZONE_guest::ns.guest.$ZONE:$TTL
+=gw.guest.$ZONE:$TC_IP_guest:$TTL
+
+EOF
+    fi
+    echo "#Static records" >> "$STATIC"
     # set ZONE fqdn to TC_PUB
     if [ -n "$TC_PUB" ]; then
         echo "+$ZONE:$TC_PUB:$TTL" >> "$STATIC"

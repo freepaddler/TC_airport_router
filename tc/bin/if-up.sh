@@ -11,6 +11,9 @@ if isIPv4 $4; then
         bridge0)
             lg "UP LAN: $*"
             ;;
+        bridge1)
+            lg "UP Guest LAN: $*"
+            ;;
         bcmeth1)
             # avoid link_local ip actions
             if isPubIP $4; then
