@@ -40,6 +40,7 @@ setup() {
         eval echo 'add '$TC_PUB' ''$'${t}_PUB' esp ''$'${t}_SPI_OUT' -E rijndael-cbc \"''$'${t}_KEY_OUT'\"\;' | setkey -c
         eval echo 'spdadd '$TC_PUB/32' ''$'${t}_PUB'/32 ip4 -P out ipsec esp/transport/'$TC_PUB'-''$'${t}_PUB'/require\;' | setkey -c
         lg "IPSec setup for gif$k"
+        k=$((k+1));
     done;
     lg "Complete setup tunnels"
 }
