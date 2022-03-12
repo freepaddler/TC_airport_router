@@ -143,13 +143,13 @@ setup_dnscache() {
 
     # setup forwarders
     #remove#chmod +w "$DNSCACHE/root/servers/@"
-    if [ $DNS_FORWARD = "root" ] && [ -s "$CONFDIR/root.ip" ] ; then 
+    if [ "$DNS_FORWARD" = "root" ] && [ -s "$CONFDIR/root.ip" ] ; then 
     # root for recursive resolver from root servers
         cat "$CONFDIR/root.ip" > "$DNSCACHE/root/servers/@"
         echo 0 > "$DNSCACHE/env/FORWARDONLY"
         #chmod -w "$DNSCACHE/root/servers/@"
         cp -f /sbin/dns-update-script-mod /sbin/dns-update-script
-    elif [ $DNS_FORWARD = "root" ]; then
+    elif [ "$DNS_FORWARD" = "root" ]; then
     # no root.ip file, use default setup
         echo 1 > "$DNSCACHE/env/FORWARDONLY"
         cp -f /sbin/dns-update-script-orig /sbin/dns-update-script
