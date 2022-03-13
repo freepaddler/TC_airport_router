@@ -128,6 +128,19 @@ setup_dnscache() {
         echo > "$DNSCACHE/root/ip/$net"
     done
 
+    # add DNS_EXTERNAL zones
+    ( IFS=; echo $DNS_EXTERNAL |
+        while read ez; do 
+            (IFS=" "; echo $ez | 
+                while read z f; do
+                    if [ -n "$z" -a -n "$f" ]; then
+                    echo "$f" > "$DNSCACHE/root/servers/$z"
+                    fi
+                done
+            )
+        done
+    ) 
+
     # create copy of original dns-update-script
     if [ ! -x /sbin/dns-update-script-orig ]; then 
         cp -f /sbin/dns-update-script /sbin/dns-update-script-orig
