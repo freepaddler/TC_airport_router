@@ -33,6 +33,7 @@ setup() {
         lg "Created gif$k"
         # setup routes
         for n in $(eval echo '$'${t}_NET); do
+            route delete $n
             eval route add $n '$'${t}_IP
         done;
         lg "Routes added for gif$k"
