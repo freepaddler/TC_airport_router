@@ -120,7 +120,7 @@ setup_dnscache() {
         done;
     )
     # add ZONE and RevZONE
-    for zone in $ZONE $RevZONE; do
+    for zone in $ZONE $RevZONE $RevZONE_guest; do
         echo 127.0.0.4 > "$DNSCACHE/root/servers/$zone"
     done;
     # set external networks served by dnscache
